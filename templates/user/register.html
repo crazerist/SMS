@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Register
+    </title>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-title">注册</div>
+        <form method="post" class="form">
+            {% csrf_token %}
+            {{form.as_p}}
+            <p><input type="submit" value="注册" class="submit-button"/></p>
+        </form>
+        <div class="return-button">
+            <a href="{% url 'login' kind %}">返回上一页</a>
+        </div>
+    </div>
+</body>
