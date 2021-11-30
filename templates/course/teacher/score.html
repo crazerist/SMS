@@ -1,6 +1,7 @@
 {% extends "course/nav.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
+    <link href="{% static 'css/form.css' %}" rel="stylesheet">
     <h3>{{ title }}</h3>
     <div class="form create-update-from">
         <form method="post">

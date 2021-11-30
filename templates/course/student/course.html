@@ -1,6 +1,7 @@
 {% extends "course/nav.html" %}
 {% block title %}课程详情{% endblock %}
 {% block content %}
+    <link href="{% static 'css/details.css' %}" rel="stylesheet">
     <h3>课程详情</h3>
     <ul class="course-details">
         <li class="course-detail"><span class="detail-name">课程编号</span> {{ object.course.id }}</li>

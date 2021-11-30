@@ -1,6 +1,7 @@
 {% extends "course/nav.html" %}
 {% block title %}创建时刻表{% endblock %}
 {% block content %}
+    <link href="{% static 'css/form.css' %}" rel="stylesheet">
     <h3>创建时刻表:&nbsp;&nbsp;&nbsp;&nbsp;[{{ course.id }}] {{ course.name }}</h3>
     <div class="form create-update-from">
         <form method="post">
