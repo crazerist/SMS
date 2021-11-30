@@ -5,6 +5,7 @@ from user.models import Student, Teacher
 from constants import INVALID_KIND, INVALID_REQUEST_METHOD
 from .forms import CourseForm, ScheduleForm
 from .models import Course, Schedule, StudentCourse
+from django.utils import timezone
 
 def get_user(request, kind):
     """
@@ -76,22 +77,7 @@ def teacher_home(request):
 
 
 def student_home(request):
-    kind = "student"
-    user = get_user(request, kind)
-
-    if not user:
-        return redirect('login', kind = kind)
-
-    info = {
-        "name": user.name,
-        "kind": kind
-    }
-
-    context = {
-        "info": info
-    }
-
-    return render(request, 'course/nav.html', context)
+    return redirect(reverse("view_course", kwargs={"view_kind": "current"}))
 
 def create_course(request):
     user = get_user(request, "teacher")
@@ -229,3 +215,90 @@ def view_detail(request, course_id):
         context["sorted_course_students"] = sorted_cs_list
 
     return render(request, "course/teacher/course.html", context)
+
+def view_course(request, view_kind):
+    """
+    :param view_kind:
+        current: 查看当前课程
+        is_end: 查看结课课程
+        select: 选课
+        withdraw: 撤课
+    """
+    user = get_user(request, "student")
+    if not user:
+        return redirect(reverse("login", kwargs={"kind": "student"}))
+
+    is_search = False
+    search_key = ""
+    if request.method == "POST":
+        search_key = request.POST.get("search")
+        if search_key:
+            is_search = True
+
+    info = {
+        "name": user.name,
+        "kind": "student",
+    }
+
+    course_list = []
+
+    if view_kind in ["select", "current", "withdraw", "is_end"]:
+        if view_kind == "select":
+            q = Q(status=2)
+            if is_search:
+                q = q & (Q(name__icontains=search_key) | Q(teacher__name__icontains=search_key))
+
+            course_list = Course.objects.filter(q)
+
+            my_course = StudentCourse.objects.filter(Q(student=user) & Q(with_draw=False))
+            my_cids = [c.course.id for c in my_course]
+            course_list = [c for c in course_list if c.id not in my_cids]
+        else:
+            q = Q(student=user) & Q(with_draw=False)
+            if is_search:
+                q = q & (Q(name__icontains=search_key) | Q(teacher__name__icontains=search_key))
+            my_course = StudentCourse.objects.filter(q)
+            if view_kind == "current":
+                course_list = [c.course for c in my_course if c.course.status < 4]
+            elif view_kind == "withdraw":
+                course_list = [c.course for c in my_course if c.course.status == 2]
+            elif view_kind == "is_end":
+                course_list = [c for c in my_course if c.course.status >= 4]
+
+    else:
+        return HttpResponse(INVALID_REQUEST_METHOD)
+
+    context = {
+        'info': info,
+        'view_kind': view_kind,
+        'course_list': course_list
+    }
+    if is_search:
+        context["search_key"] = search_key
+
+    return render(request, 'course/student/home.html', context)
+
+def operate_course(request, operate_kind, course_id):
+    """
+    :param operate_kind:
+        select: 选课
+        withdraw: 撤课
+    """
+    user = get_user(request, "student")
+    if not user:
+        return redirect(reverse("login", kwargs={"kind": "student"}))
+
+    if operate_kind not in ["select", "withdraw"]:
+        return HttpResponse(ILLEGAL_KIND)
+    elif operate_kind == "select":
+        course = Course.objects.filter(pk=course_id).get()
+        new_course = StudentCourse(student=user, course=course)
+        new_course.save()
+    elif operate_kind == "withdraw":
+        q = Q(course__id=course_id) & Q(student=user) & Q(with_draw=False)
+        course = StudentCourse.objects.filter(q).get()
+        course.with_draw = True
+        course.with_draw_time = timezone.now()
+        course.save()
+
+    return redirect(reverse("view_course", kwargs={"view_kind": operate_kind}))

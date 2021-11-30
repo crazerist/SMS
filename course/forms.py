@@ -33,3 +33,27 @@ class ScoreForm(forms.ModelForm):
 
     def clean_course(self):
         return self.initial['course']
+
+class RateForm(forms.ModelForm):
+    class Meta:
+        model = StudentCourse
+        fields = ["course", "scores", "comments", "rating", "assessment"]
+
+    course = forms.CharField(label="课程", disabled=True)
+    scores = forms.IntegerField(label="成绩", disabled=True)
+    comments = forms.CharField(label="老师评价", disabled=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial['course'] = self.instance.course
+        self.initial['scores'] = self.instance.scores
+        self.initial['comments'] = self.instance.comments
+
+    def clean_course(self):
+        return self.initial['course']
+
+    def clean_scores(self):
+        return self.initial['scores']
+
+    def clean_comments(self):
+        return self.initial['comments']
