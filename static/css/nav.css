@@ -1,30 +1,31 @@
-body,p {
+body,
+p {
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html,body {
     height: 100%;
     width: 100%;
 }
 
 body {
+    /*background: #e6e6f0;*/
     background: #ccc;
 }
 
+
 .nav {
     background: #4a2c98;
+    position: fixed;
     width: 100%;
+    color: #ccc;
+    z-index: 1;
 }
 
-.nav a {
-    color: #ccc;
-    text-decoration: unset;
-}
 
 .nav .nav-title,
-.nav .name-logo,
-.nav .log-out  {
+.nav .name-logo {
     display: inline-block;
     margin: 5px;
 }
@@ -35,15 +36,21 @@ body {
     padding-left: 10px;
 }
 
-.nav .nav-title {
+
+.nav .nav-title{
     font-size: 24px;
     line-height: 26px;
     height: 26px;
     vertical-align: top;
+
 }
 
+.nav .nav-title a {
+    color: unset;
+    text-decoration: unset;
+}
 
-.nav p.main-title {
+.nav p.main-title{
     margin-right: 10px;
 }
 
@@ -51,11 +58,9 @@ body {
     border-left: 3px solid #cccccc;
 }
 
-.nav .name-logo,
-.nav .log-out  {
+.nav .name-logo {
     float: right;
-    margin: 8px 5px 0;
-    vertical-align: top;
+    margin-top: 8px;
 }
 
 .nav .name-logo .user-name {
@@ -63,7 +68,7 @@ body {
     border-radius: 50%;
     width: 24px;
     height: 24px;
-
+    color: #4a2c98;
     text-align: center;
     line-height: 24px;
     font-size: 16px;
@@ -71,13 +76,18 @@ body {
 }
 
 .nav .name-logo .user-name a {
-    color: #4a2c98;
+    text-decoration: none;
+}
+
+.nav .log-out {
+    display: inline-block;
+    float: right;
+    margin: 9px 5px 0;
 }
 
 .nav .log-out a {
     margin: 5px;
     background: #ccc;
-    color: #4a2c98;
     border-radius: 5px;
     text-decoration: none;
     padding: 0 5px;

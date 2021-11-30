@@ -1,4 +1,5 @@
 INVALID_KIND = "Invalid kind.kind should be student or teacher."
+INVALID_REQUEST_METHOD = "Invalid request method."
 
 COURSE_STATUS = {
     1: "未开始选课",
