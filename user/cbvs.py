@@ -1,5 +1,8 @@
 from django.shortcuts import reverse, redirect
 from django.views.generic import CreateView
+from django.views.generic import UpdateView
+from user.forms import StuUpdateForm
+
 
 from user.forms import StuRegisterForm, TeaRegisterForm
 
@@ -103,3 +106,33 @@ class CreateTeacherView(CreateView):
         context["kind"] = "teacher"
 
         return context
+
+class UpdateStudentView(UpdateView):
+    model = Student
+    form_class = StuUpdateForm
+    template_name = "user/update.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateStudentView, self).get_context_data(**kwargs)
+        context.update(kwargs)
+        context["kind"] = "student"
+        return context
+
+    def get_success_url(self):
+        return reverse("course", kwargs={"kind": "student"})
+
+
+class UpdateTeacherView(UpdateView):
+    model = Teacher
+    form_class = TeaRegisterForm
+    template_name = "user/update.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateTeacherView, self).get_context_data(**kwargs)
+        context.update(kwargs)
+        context["kind"] = "teacher"
+        return context
+
+    def get_success_url(self):
+        return reverse("course", kwargs={"kind": "teacher"})
+

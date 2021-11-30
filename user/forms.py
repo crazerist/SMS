@@ -52,3 +52,15 @@ class TeaRegisterForm(forms.ModelForm):
         confirm_password = cleaned_data.get('confirm_password')
         if confirm_password != password:
             self.add_error('confirm_password', 'Password does not match.')
+
+class StuUpdateForm(StuRegisterForm):
+    class Meta:
+        model = Student
+        fields = ('name',
+                  'password',
+                  'confirm_password',
+                  'gender',
+                  'birthday',
+                  'email',
+                  'info')
+
