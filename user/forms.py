@@ -23,7 +23,7 @@ class StuRegisterForm(forms.ModelForm):
                   'gender',
                   'birthday',
                   'email',
-                  'info')
+                  'phone')
 
     def clean(self):
         cleaned_data = super(StuRegisterForm, self).clean()
@@ -44,7 +44,7 @@ class TeaRegisterForm(forms.ModelForm):
                   'gender',
                   'birthday',
                   'email',
-                  'info')
+                  'phone')
 
     def clean(self):
         cleaned_data = super(TeaRegisterForm, self).clean()
@@ -62,5 +62,5 @@ class StuUpdateForm(StuRegisterForm):
                   'gender',
                   'birthday',
                   'email',
-                  'info')
+                  'phone')
 
